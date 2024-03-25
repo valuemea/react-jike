@@ -1,10 +1,18 @@
-import './index.scss'
-import { Card, Form, Input, Button } from 'antd'
 import logo from '@/assets/logo.png'
+import { fetchLogin } from '@/store/modules/user'
+import { toHaveFormValues } from '@testing-library/jest-dom/matchers'
+import { Button, Card, Form, Input, message } from 'antd'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import './index.scss'
 
 const Login = () => {
-  const onFinish = (value)=>{
-    console.log(value);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const onFinish = async (values) => {
+    await dispatch(fetchLogin(values))
+    navigate('/')   // 跳转到首页
+    message.success('登录成功')
   }
   return (
     <div className="login">
@@ -25,7 +33,7 @@ const Login = () => {
           >
             <Input size="large" placeholder="请输入手机号" />
           </Form.Item>
-          <Form.Item name='passwork' rules={[{ required: true, message: '请输入验证码' }]}>
+          <Form.Item name='code' rules={[{ required: true, message: '请输入验证码' }]}>
             <Input size="large" placeholder="请输入验证码" />
           </Form.Item>
           <Form.Item>

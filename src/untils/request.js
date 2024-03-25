@@ -1,6 +1,8 @@
 // axios 的封装处理
 // 1. 根域名配置 2. 超时时间 3. 请求拦截器 / 响应拦截器
 
+import axios from "axios";
+
 // 自定义创建一个axios实例
 const request = axios.create({
   baseURL: "http://geek.itheima.net/v1_0",
