@@ -1,4 +1,4 @@
-import { fetchUserInfo } from '@/store/modules/user';
+import { clearUserInfo, fetchUserInfo } from '@/store/modules/user';
 import {
   DiffOutlined,
   EditOutlined, HomeOutlined, LogoutOutlined
@@ -40,6 +40,12 @@ const Index = () => {
     navigate(path)
   }
   const location = useLocation()  // 获取当前路由路径
+
+  // 退出确认登录回调
+  const onConfirm = () => {
+    dispatch(clearUserInfo())
+    navigate('/login')
+  }
   return (
     <Layout  >
       <Header className="header">
@@ -47,7 +53,7 @@ const Index = () => {
         <div className="user-info">
           <span className="user-name">{userInfo.name}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm} >
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>

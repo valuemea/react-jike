@@ -1,5 +1,5 @@
 import { request } from "@/untils";
-import { getToken, setToken as _setToken } from '@/untils/token';
+import { getToken, removeToken, setToken as _setToken } from '@/untils/token';
 import { createSlice } from '@reduxjs/toolkit';
 
 const userStore = createSlice({
@@ -16,9 +16,14 @@ const userStore = createSlice({
     setUserInfo(state, action) {
       state.userInfo = action.payload
     },
+    clearUserInfo(state,action){
+      state.token = ''
+      state.userInfo={}
+      removeToken()
+    }
   }
 })
-const { setToken, setUserInfo } = userStore.actions
+const { setToken, setUserInfo,clearUserInfo } = userStore.actions
 
 // 13800000002   246810   这个手机号和验证码可以正确登录
 const fetchLogin = (loginForm) => async (dispatch) => {
@@ -32,5 +37,5 @@ const fetchUserInfo = () => async (dispatch) => {
 }
 
 
-export { setToken, fetchLogin, fetchUserInfo };
+export { setToken, fetchLogin, fetchUserInfo,clearUserInfo };
 export default userStore.reducer
