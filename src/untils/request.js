@@ -1,8 +1,9 @@
 // axios 的封装处理
 // 1. 根域名配置 2. 超时时间 3. 请求拦截器 / 响应拦截器
 
+import router from "@/router";
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, removeToken } from "./token";
 
 // 自定义创建一个axios实例
 const request = axios.create({
@@ -30,6 +31,11 @@ request.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   // 对响应错误做点什么
+  if (error.response.status === 401) {
+    removeToken()
+    router.navigate('/login')
+    window.location.reload() // 页面刷新，redux中的数据也会重置
+  }
   return Promise.reject(error);
 });
 
