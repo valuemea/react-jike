@@ -1,3 +1,4 @@
+import { getProfileAPI, loginApI } from "@/apis/user";
 import { request } from "@/untils";
 import { getToken, removeToken, setToken as _setToken } from '@/untils/token';
 import { createSlice } from '@reduxjs/toolkit';
@@ -27,12 +28,12 @@ const { setToken, setUserInfo,clearUserInfo } = userStore.actions
 
 // 13800000002   246810   这个手机号和验证码可以正确登录
 const fetchLogin = (loginForm) => async (dispatch) => {
-  const res = await request.post('/authorizations', loginForm)
+  const res = await loginApI(loginForm)
   dispatch(setToken(res.data.data.token))
 }
 // 获取个人用户信息
 const fetchUserInfo = () => async (dispatch) => {
-  const res = await request.get('/user/profile')
+  const res = await getProfileAPI()
   dispatch(setUserInfo(res.data.data))
 }
 
