@@ -1,9 +1,11 @@
+import { fetchUserInfo } from '@/store/modules/user';
 import {
   DiffOutlined,
   EditOutlined, HomeOutlined, LogoutOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, Popconfirm } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './index.scss';
 const { Header, Sider } = Layout;
@@ -25,8 +27,14 @@ const items = [
     icon: <EditOutlined />,
   },
 ]
+
 const Index = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { userInfo = {} } = useSelector(state => state.user)
+  useEffect(() => {
+    dispatch(fetchUserInfo())
+  }, [dispatch])
   const onMenuClick = (route) => {
     const path = route.key
     navigate(path)
@@ -37,7 +45,7 @@ const Index = () => {
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{userInfo.name}</span>
           <span className="user-logout">
             <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
               <LogoutOutlined /> 退出
