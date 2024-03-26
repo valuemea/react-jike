@@ -4,7 +4,7 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Popconfirm } from 'antd';
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './index.scss';
 const { Header, Sider } = Layout;
 const items = [
@@ -31,6 +31,7 @@ const Index = () => {
     const path = route.key
     navigate(path)
   }
+  const location = useLocation()  // 获取当前路由路径
   return (
     <Layout  >
       <Header className="header">
@@ -49,10 +50,10 @@ const Index = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['/']}
+            selectedKeys={location.pathname}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
-            onClick={onMenuClick} s
+            onClick={onMenuClick}
           />
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
