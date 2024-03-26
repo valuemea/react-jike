@@ -4,28 +4,33 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu, Popconfirm } from 'antd';
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import './index.scss';
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Sider } = Layout;
 const items = [
   {
     label: '首页',
-    key: '1',
+    key: '/',
     icon: <HomeOutlined />,
   },
   {
     label: '文章管理',
-    key: '2',
+    key: '/article',
     icon: <DiffOutlined />,
+    path: '/article'
   },
   {
     label: '创建文章',
-    key: '3',
+    key: '/publish',
     icon: <EditOutlined />,
   },
 ]
 const Index = () => {
-
+  const navigate = useNavigate()
+  const onMenuClick = (route) => {
+    const path = route.key
+    navigate(path)
+  }
   return (
     <Layout  >
       <Header className="header">
@@ -44,9 +49,11 @@ const Index = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={['/']}
             items={items}
-            style={{ height: '100%', borderRight: 0 }}></Menu>
+            style={{ height: '100%', borderRight: 0 }}
+            onClick={onMenuClick} s
+          />
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>
           {/* 二级路由出口 */}
