@@ -1,17 +1,41 @@
-import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Table, Tag, Space } from 'antd'
-// 引入汉化包，让时间选择器显示中文
-import locale from 'antd/es/date-picker/locale/zh_CN'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { getArticleListAPI } from '@/apis/article'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Card, DatePicker, Form, Radio, Select, Space, Table, Tag } from 'antd'
+// 引入汉化包，让时间选择器显示中文
+import locale from 'antd/es/date-picker/locale/zh_CN'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
-
+const data = [
+  {
+    id: '8218',
+    comment_count: 0,
+    cover: {
+      images: [],
+    },
+    like_count: 0,
+    pubdate: '2019-03-11 09:00:00',
+    read_count: 2,
+    status: 2,
+    title: 'wkwebview离线化加载h5资源解决方案'
+  }
+]
 const Article = () => {
   const { channelList } = useChannel()
-
+  const [list, setList] = useState([])
+  const [count,setCount] = useState(0)
+  useEffect(() => {
+    async function getList() {
+      const res = await getArticleListAPI()
+      setList(res.data.data.results)
+      setCount(res.data.data.total_count)
+    }
+    getList()
+  }, [])
   const columns = [
     {
       title: '封面',
@@ -64,21 +88,7 @@ const Article = () => {
       }
     }
   ]
-  // 准备表格body数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
-    }
-  ]
+
   return (
     <div>
       <Card
@@ -120,8 +130,8 @@ const Article = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
     </div>
   )
