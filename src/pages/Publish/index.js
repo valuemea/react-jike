@@ -1,4 +1,5 @@
 import { createArticleAPI, getChannelAPI } from '@/apis/article'
+import { useChannel } from '@/hooks/useChannel'
 import { PlusOutlined } from '@ant-design/icons'
 import {
   Breadcrumb, Button, Card, Form, Input, message, Radio, Select, Space, Upload
@@ -12,18 +13,11 @@ import './index.scss'
 const { Option } = Select
 
 const Publish = () => {
-  const [channelList, setChannelList] = useState([])
   const [imageList, setImageList] = useState([])
   const [imageType, setImageType] = useState(0)
-  useEffect(() => {
-    const getChannelList = async () => {
-      const res = await getChannelAPI()
-      setChannelList(res.data.data.channels)
-    }
-    getChannelList()
-  }, [])
+  const { channelList } = useChannel()
+
   const onFinish = async (values) => {
-    // console.log(values, 222);
     if (imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
     const reqData = {
       ...values,
@@ -35,9 +29,7 @@ const Publish = () => {
     const res = await createArticleAPI(reqData)
   }
   const onUploadChange = (e) => {
-    console.log(e, 222);
     setImageList(e.fileList)
-
   }
   const onTypeChange = (e) => {
     console.log(e.target.value);
