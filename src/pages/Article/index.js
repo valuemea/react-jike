@@ -27,15 +27,24 @@ const data = [
 const Article = () => {
   const { channelList } = useChannel()
   const [list, setList] = useState([])
-  const [count,setCount] = useState(0)
+  const [count, setCount] = useState(0)
+  const [reqData, setReqData] = useState({
+    status: '',
+    page: 1,
+    per_page: 2
+  })
   useEffect(() => {
     async function getList() {
-      const res = await getArticleListAPI()
+      const res = await getArticleListAPI(reqData)
       setList(res.data.data.results)
       setCount(res.data.data.total_count)
     }
     getList()
-  }, [])
+  }, [reqData])
+  const status = [
+    <Tag color="warning">等审核</Tag>,
+    <Tag color="green">审核通过</Tag>
+  ]
   const columns = [
     {
       title: '封面',
@@ -53,7 +62,7 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: data => <Tag color="green">审核通过</Tag>
+      render: data => status[data - 1]
     },
     {
       title: '发布时间',
@@ -88,6 +97,15 @@ const Article = () => {
       }
     }
   ]
+  const onFinish = (values) => {
+    setReqData({
+      ...reqData,
+      channel_id: values.channel_id,
+      status: values.status,
+      begin_pubdate: values.data && values.data[0].format('YYYY-MM-DD'),
+      end_pubdate: values.data && values.data[1].format('YYYY-MM-DD'),
+    })
+  }
 
   return (
     <div>
@@ -100,7 +118,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: '' }}>
+        <Form initialValues={{ status: '' }} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
@@ -131,7 +149,19 @@ const Article = () => {
         </Form>
       </Card>
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={list}
+          pagination={{
+            total: count,
+            pageSize:reqData.per_page,
+            current:reqData.page,
+            onChange:(e)=>{
+              setReqData({...reqData,page:e})
+            }
+          }}
+        />
       </Card>
     </div>
   )
