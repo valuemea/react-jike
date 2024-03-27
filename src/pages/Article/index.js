@@ -1,12 +1,12 @@
-import { getArticleListAPI } from '@/apis/article'
+import { delArticleAPI, getArticleListAPI } from '@/apis/article'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { Breadcrumb, Button, Card, DatePicker, Form, Radio, Select, Space, Table, Tag } from 'antd'
+import { Breadcrumb, Button, Card, DatePicker, Form, Popconfirm, Radio, Select, Space, Table, Tag } from 'antd'
 // 引入汉化包，让时间选择器显示中文
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -33,6 +33,7 @@ const Article = () => {
     page: 1,
     per_page: 2
   })
+  const navigate = useNavigate()
   useEffect(() => {
     async function getList() {
       const res = await getArticleListAPI(reqData)
@@ -85,18 +86,35 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
             <Button
               type="primary"
-              danger
               shape="circle"
-              icon={<DeleteOutlined />}
+              icon={<EditOutlined />}
+              onClick={() => { navigate(`/publish?id=${data.id}`) }}
             />
+            <Popconfirm
+              title="删除文章"
+              description="确认要删除当前文章吗?"
+              onConfirm={() => { onConfirm(data) }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       }
     }
   ]
+  const onConfirm = async (data) => {
+    await delArticleAPI(data.id)
+    setReqData({ ...reqData })
+  }
   const onFinish = (values) => {
     setReqData({
       ...reqData,
@@ -130,7 +148,7 @@ const Article = () => {
           <Form.Item label="频道" name="channel_id">
             <Select
               placeholder="请选择文章频道"
-              style={{ width: 120 }}
+              style={{ width: 180 }}
             >
               {channelList?.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
             </Select>
@@ -155,10 +173,10 @@ const Article = () => {
           dataSource={list}
           pagination={{
             total: count,
-            pageSize:reqData.per_page,
-            current:reqData.page,
-            onChange:(e)=>{
-              setReqData({...reqData,page:e})
+            pageSize: reqData.per_page,
+            current: reqData.page,
+            onChange: (e) => {
+              setReqData({ ...reqData, page: e })
             }
           }}
         />
