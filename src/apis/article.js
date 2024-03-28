@@ -16,10 +16,18 @@ export function createArticleAPI(params) {
     data: params
   })
 }
+// 修改文章表单
+export function updateArticleAPI(params,id) {
+  return request({
+    url: `/mp/articles/${id}?draft=false`,
+    method: 'PUT',
+    data:params
+  })
+}
 // 获取文章列表
 export function getArticleListAPI(params) {
   return request({
-    url: '/mp/articles',  
+    url: '/mp/articles',
     method: 'GET',
     params: params
   })
@@ -27,7 +35,14 @@ export function getArticleListAPI(params) {
 // 删除文章数据
 export function delArticleAPI(id) {
   return request({
-    url: `/mp/articles/${id}`,  
+    url: `/mp/articles/${id}`,
     method: 'DELETE',
+  })
+}
+// 获取文章详情
+export function getArticleById(id) {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: 'GET',
   })
 }
