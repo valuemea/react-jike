@@ -4,13 +4,13 @@ import React, { useEffect, useRef } from 'react';
 
 const BarChart = ({ title, xData = [], sData = [], style = { width: '400px', height: '300px' } }) => {
   const chartRef = useRef()
+  let myChart
   useEffect(() => {
     // 1. 获取渲染图表的dom节点(可以直接获取实例，也可以给节点绑定ref 实例)
     // const chartDom = document.getElementById('main');
     const chartDom = chartRef.current;
-
     // 2. 图表初始化生成图表实例对象
-    const myChart = echarts.init(chartDom);
+    if (!myChart) myChart = echarts.init(chartDom);  // 做一个限制，如果eachart 已生成实例则不需要再重新初始化了
     // 3. 准备图表参数
     const option = {
       title: {

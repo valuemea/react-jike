@@ -10,20 +10,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
-const data = [
-  {
-    id: '8218',
-    comment_count: 0,
-    cover: {
-      images: [],
-    },
-    like_count: 0,
-    pubdate: '2019-03-11 09:00:00',
-    read_count: 2,
-    status: 2,
-    title: 'wkwebview离线化加载h5资源解决方案'
-  }
-]
+
 const Article = () => {
   const { channelList } = useChannel()
   const [list, setList] = useState([])
